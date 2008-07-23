@@ -129,7 +129,7 @@ var LazyLoad = function () {
           if (ua.ie) {
             // If this is IE, watch the last script's ready state.
             script.onreadystatechange = function () {
-              if (this.readyState === 'loaded') {
+              if (this.readyState === 'loaded' || this.readyState === 'complete') {
                 LazyLoad.requestComplete();
               }
             };
