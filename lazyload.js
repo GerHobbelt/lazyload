@@ -215,6 +215,42 @@ var LazyLoad = (function () {
       // Cast urls to an Array.
       urls = urls.constructor === Array ? urls : [urls];
 
+      // TODO: write tests
+      // START ALVIN CODE
+      var actual_urls = [];
+      // TODO: Check if we've already loaded any urls.
+      if (isCSS) {
+        var loaded_tags = document.getElementsByTagName('link');
+        for (var ui = 0, ulen = urls.length; ui < ulen; ui++) {
+          var uurl = urls[ui];
+          var load_this = true;
+          for (var lti = 0, ltlen = loaded_tags.length; lti < ltlen; lti++) {
+            if (uurl === loaded_tags[i].href) {
+              load_this = false;
+              break;
+            }
+          }
+          if (load_this) { actual_urls.push(uurl); }
+        }
+      } else {
+        var loaded_tags = document.getElementsByTagName('script');
+        for (var ui = 0, ulen = urls.length; ui < ulen; ui++) {
+          var uurl = urls[ui];
+          var load_this = true;
+          for (var lti = 0, ltlen = loaded_tags.length; lti < ltlen; lti++) {
+            if (uurl === loaded_tags[i].src) {
+              load_this = false;
+              break;
+            }
+          }
+          if (load_this) { actual_urls.push(uurl); }
+        }
+      }
+      urls = actual_urls;
+      // END ALVIN CODE
+
+      // Might need a param to control whether the callback is executed if the file's already included.
+
       // Create a request object for each URL. If multiple URLs are specified,
       // the callback will only be executed after all URLs have been loaded.
       //
@@ -225,12 +261,14 @@ var LazyLoad = (function () {
       // All browsers respect CSS specificity based on the order of the link
       // elements in the DOM, regardless of the order in which the stylesheets
       // are actually downloaded.
+
       if (isCSS || ua.gecko || ua.opera) {
         queue[type].push({
           urls    : [].concat(urls), // concat ensures copy by value
           callback: callback,
           obj     : obj,
-          scope   : scope
+          scope   : scope,
+          loaded  : false
         });
       } else {
         for (i = 0, len = urls.length; i < len; ++i) {
@@ -238,7 +276,8 @@ var LazyLoad = (function () {
             urls    : [urls[i]],
             callback: i === len - 1 ? callback : null, // callback is only added to the last URL
             obj     : obj,
-            scope   : scope
+            scope   : scope,
+            loaded  : false
           });
         }
       }
