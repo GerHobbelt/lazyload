@@ -215,35 +215,41 @@ var LazyLoad = (function () {
       // Cast urls to an Array.
       urls = urls.constructor === Array ? urls : [urls];
 
-      // TODO: write tests
       // START ALVIN CODE
       var actual_urls = [];
-      // TODO: Check if we've already loaded any urls.
+      // TODO: Will 301s break this check?
       if (isCSS) {
-        var loaded_tags = document.getElementsByTagName('link');
         for (var ui = 0, ulen = urls.length; ui < ulen; ui++) {
-          var uurl = urls[ui];
-          var load_this = true;
+          var loaded_tags = document.getElementsByTagName('link');
+          // var uurl = urls[ui];
+          var uurl = createNode('link', {
+            href   : urls[ui]
+          }).href;
+          var not_yet_loaded = true;
           for (var lti = 0, ltlen = loaded_tags.length; lti < ltlen; lti++) {
-            if (uurl === loaded_tags[i].href) {
-              load_this = false;
+            var href = loaded_tags[lti].href;
+            if (uurl === loaded_tags[lti].href) {
+              not_yet_loaded = false;
               break;
             }
           }
-          if (load_this) { actual_urls.push(uurl); }
+          if (not_yet_loaded) { actual_urls.push(uurl); }
         }
       } else {
-        var loaded_tags = document.getElementsByTagName('script');
         for (var ui = 0, ulen = urls.length; ui < ulen; ui++) {
-          var uurl = urls[ui];
-          var load_this = true;
+          var loaded_tags = document.getElementsByTagName('script');
+          // var uurl = urls[ui];
+          var uurl = createNode('script', {
+            src    : urls[ui]
+          }).src;
+          var not_yet_loaded = true;
           for (var lti = 0, ltlen = loaded_tags.length; lti < ltlen; lti++) {
-            if (uurl === loaded_tags[i].src) {
-              load_this = false;
+            if (uurl === loaded_tags[lti].src) {
+              not_yet_loaded = false;
               break;
             }
           }
-          if (load_this) { actual_urls.push(uurl); }
+          if (not_yet_loaded) { actual_urls.push(uurl); }
         }
       }
       urls = actual_urls;
