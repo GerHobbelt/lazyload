@@ -221,7 +221,6 @@ var LazyLoad = (function () {
       if (isCSS) {
         for (var ui = 0, ulen = urls.length; ui < ulen; ui++) {
           var loaded_tags = document.getElementsByTagName('link');
-          // var uurl = urls[ui];
           var uurl = createNode('link', {
             href   : urls[ui]
           }).href;
@@ -238,7 +237,6 @@ var LazyLoad = (function () {
       } else {
         for (var ui = 0, ulen = urls.length; ui < ulen; ui++) {
           var loaded_tags = document.getElementsByTagName('script');
-          // var uurl = urls[ui];
           var uurl = createNode('script', {
             src    : urls[ui]
           }).src;
@@ -255,8 +253,6 @@ var LazyLoad = (function () {
       urls = actual_urls;
       // END ALVIN CODE
 
-      // Might need a param to control whether the callback is executed if the file's already included.
-
       // Create a request object for each URL. If multiple URLs are specified,
       // the callback will only be executed after all URLs have been loaded.
       //
@@ -268,7 +264,9 @@ var LazyLoad = (function () {
       // elements in the DOM, regardless of the order in which the stylesheets
       // are actually downloaded.
 
-      if (isCSS || ua.gecko || ua.opera) {
+      // ALVIN CHANGE: If there's nothing to load, don't add anything to the queue or the callback will occur
+      // TODO: Can we encapsulate this in loadOnce instead?
+      if ((isCSS || ua.gecko || ua.opera) && urls.length > 0) {
         queue[type].push({
           urls    : [].concat(urls), // concat ensures copy by value
           callback: callback,
