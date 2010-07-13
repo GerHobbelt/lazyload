@@ -120,6 +120,8 @@ var LazyLoad = (function () {
 
     // If this is the last of the pending URLs, execute the callback and
     // start the next request in the queue (if any).
+    // TODO: decide whether it's more likely that we always want to 
+    // execute the callback (i.e., which should be the default?)
     if (!urls.length) {
       if (callback) {
         callback.call(p.scope || window, p.obj);
@@ -297,7 +299,7 @@ var LazyLoad = (function () {
         node.onload = node.onerror = _finish;
       }
 
-      // TODO: Handle callback correctly using force parameter?
+      // TODO: Handle callback based on force parameter?
       // head.appendChild(node);
 
       var loaded_tags = [];
