@@ -226,8 +226,6 @@ var LazyLoad = (function () {
       // elements in the DOM, regardless of the order in which the stylesheets
       // are actually downloaded.
 
-      // ALVIN CHANGE: If there's nothing to load, don't add anything to the queue or the callback will occur
-      // TODO: Can we encapsulate this in loadOnce instead?
       if ((isCSS || ua.gecko || ua.opera) && urls.length > 0) {
         queue[type].push({
           urls    : [].concat(urls), // concat ensures copy by value
@@ -299,6 +297,7 @@ var LazyLoad = (function () {
         node.onload = node.onerror = _finish;
       }
 
+      // TODO: Handle callback correctly using force parameter?
       // head.appendChild(node);
 
       var loaded_tags = [];
