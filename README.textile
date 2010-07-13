@@ -6,9 +6,7 @@ In addition to CSS support, this version of LazyLoad also adds support for paral
 
 h2. Downloads
 
-  * "lazyload.js":http://pieisgood.org/files/lazyload-2.0.0/lazyload.js (full source)
-  * "lazyload-min.js":http://pieisgood.org/files/lazyload-2.0.0/lazyload-min.js (minified source)
-  * Archive: "tgz":http://github.com/rgrove/lazyload/tarball/release-2.0.0 | "zip":http://github.com/rgrove/lazyload/zipball/release-2.0.0
+This is a fork, so the links were wrong and I'm not hosting anywhere other than github.
 
 h2. Usage
 
