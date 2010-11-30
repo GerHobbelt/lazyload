@@ -114,14 +114,37 @@ LazyLoad = (function () {
 
       urls.shift();
       pollCount = 0;
+      //alert('finish! ' + type + ' ' + urls.length + ' ' + callback);
+
+      // execute the callback for each finished JS load (progress bars 'n stuff can use this!)
+      if (callback) {
+          callback.call(p.context, p.obj, {
+                base_context: this,
+                // JS or CSS: which queue entry just finished loading
+                type: type,
+				// Because most often you'd want to know if you're the very last one in there, or not:
+				todo_count: queue[type].length,
+                // Reference to the browser's document object.
+                document: document,
+                // Reference to the <head> element.
+                htmlhead: head,
+                // Requests currently in progress, if any.
+                pending_set: pending,
+                // Number of times we've polled to check whether a pending stylesheet has
+                // finished loading in WebKit. If this gets too high, we're probably stalled.
+                finish_pollcount: pollCount,
+                // Queued requests.
+                load_queue: queue,
+                // Reference to the browser's list of stylesheets.
+                page_stylesheets: styleSheets,
+                // User environment information.
+                user_environment: env
+              });
+        }
 
       // If this is the last of the pending URLs, execute the callback and
       // start the next request in the queue (if any).
       if (!urls.length) {
-        if (callback) {
-          callback.call(p.context, p.obj);
-        }
-
         pending[type] = null;
 
         if (queue[type].length) {
@@ -247,7 +270,8 @@ LazyLoad = (function () {
         for (i = 0, len = urls.length; i < len; ++i) {
           queue[type].push({
             urls    : [urls[i]],
-            callback: i === len - 1 ? callback : null, // callback is only added to the last URL
+            // callback: i === len - 1 ? callback : null, // callback is only added to the last URL
+            callback: callback,
             obj     : obj,
             context : context
           });
