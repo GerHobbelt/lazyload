@@ -114,7 +114,6 @@ LazyLoad = (function () {
 
       urls.shift();
       pollCount = 0;
-      //alert('finish! ' + type + ' ' + urls.length + ' ' + callback);
 
       // execute the callback for each finished JS load (progress bars 'n stuff can use this!)
       if (callback) {
@@ -122,8 +121,8 @@ LazyLoad = (function () {
                 base_context: this,
                 // JS or CSS: which queue entry just finished loading
                 type: type,
-				// Because most often you'd want to know if you're the very last one in there, or not:
-				todo_count: queue[type].length,
+                // Because most often you'd want to know if you're the very last one in there, or not:
+                todo_count: queue[type].length,
                 // Reference to the browser's document object.
                 document: document,
                 // Reference to the <head> element.
