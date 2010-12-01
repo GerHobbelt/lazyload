@@ -228,9 +228,16 @@ LazyLoad = (function () {
    * @param {Object} obj (optional) object to pass to the callback function
    * @param {Object} context (optional) if provided, the callback function will
    *   be executed in this object's context
+   * @param {Boolean} whether you want to append (false, default) the new intries
+   *        at the end of the queue or insert (true) at the front of the queue.
+   *        The latter method should be used when your loaded JS adds to the queue
+   *        recursively: by inserting, rather than appending to the queue, you
+   *        ensure that your 'children' are all loaded before the next 'sibling'.
+   *        Note that the load order of all urls specified in a single load() call
+   *        remains exactly the same, irrespective of this parameter.
    * @private
    */
-  function load(type, urls, callback, obj, context) {
+  function load(type, urls, callback, obj, context, insert) {
     var _finish = function () { finish(type); },
         isCSS   = type === 'css',
         i, len, node, p, pendingUrls, url;
@@ -258,16 +265,25 @@ LazyLoad = (function () {
       // All browsers respect CSS specificity based on the order of the link
       // elements in the DOM, regardless of the order in which the stylesheets
       // are actually downloaded.
-      if (isCSS || (env.gecko && (env.no_async || env.gecko < 2)) || env.opera) {
-        queue[type].push({
+jslog('LL: js269 ' + insert + ', insert: ' + !insert + ', isCSS: ' + isCSS + ', env.gecko: ' + env.gecko+ ', env.no_async: ' + env.no_async + ', env.opera: ' + env.opera + ', env.ie: ' + env.ie + ', env.webkit: ' + env.webkit);
+      if (isCSS || (env.gecko && (env.no_async || env.gecko < 1.9)) || (env.opera && env.opera < 9.8)) {
+        var o = {
           urls    : [].concat(urls), // concat ensures copy by value
           callback: callback,
           obj     : obj,
           context : context
-        });
+        };
+        if (!insert) {
+			queue[type].push(o);
+		} else {
+			queue[type].unshift(o);
+		}
+		//alert(queue[type].length + ' / ' + urls.length);
       } else {
+	    var t = (!insert ? queue[type] : []);
+		// keep the order of the urls[] list itself as always: FCFS
         for (i = 0, len = urls.length; i < len; ++i) {
-          queue[type].push({
+          t.push({
             urls    : [urls[i]],
             // callback: i === len - 1 ? callback : null, // callback is only added to the last URL
             callback: callback,
@@ -275,6 +291,8 @@ LazyLoad = (function () {
             context : context
           });
         }
+	    if (insert) queue[type] = t.concat(queue[type]);
+		//alert(queue[type].length + ' / ' + urls.length);
       }
     }
 
@@ -402,8 +420,8 @@ LazyLoad = (function () {
      *   will be executed in this object's context
      * @static
      */
-    css: function (urls, callback, obj, context) {
-      load('css', urls, callback, obj, context);
+    css: function (urls, callback, obj, context, insert) {
+      load('css', urls, callback, obj, context, insert);
     },
 
     /**
@@ -427,9 +445,9 @@ LazyLoad = (function () {
      *   will be executed in this object's context
      * @static
      */
-    js: function (urls, callback, obj, context) {
-      load('js', urls, callback, obj, context);
+    js: function (urls, callback, obj, context, insert) {
+jslog('LL: js');
+      load('js', urls, callback, obj, context, insert);
     }
-
   };
 }());
