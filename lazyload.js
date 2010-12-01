@@ -175,7 +175,7 @@ LazyLoad = (function () {
       // True if this browser supports disabling async mode on dynamically
       // created script nodes. This feature should show up in FF4. See
       // http://wiki.whatwg.org/wiki/Dynamic_Script_Execution_Order
-      async: d.createElement('script').async === true,
+      no_async: d.createElement('script').async === true, // better name for the member than 'async' ;-)
 
       // Browser version numbers sniffed from the user agent string.
       gecko : 0,
@@ -258,7 +258,7 @@ LazyLoad = (function () {
       // All browsers respect CSS specificity based on the order of the link
       // elements in the DOM, regardless of the order in which the stylesheets
       // are actually downloaded.
-      if (isCSS || (env.gecko && (env.async || env.gecko < 2)) || env.opera) {
+      if (isCSS || (env.gecko && (env.no_async || env.gecko < 2)) || env.opera) {
         queue[type].push({
           urls    : [].concat(urls), // concat ensures copy by value
           callback: callback,
@@ -305,7 +305,7 @@ LazyLoad = (function () {
           src    : url
         });
 
-        if (env.async) {
+        if (env.no_async) {
           node.async = false;
         }
       }
