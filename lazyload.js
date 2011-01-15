@@ -465,3 +465,76 @@ LazyLoad = (function () {
     }
   };
 }());
+
+
+
+
+
+
+
+
+/*
+There's some serious issues with load order when loading multiple JavaScript files and depending
+on this 'load order' IN ANY WAY in either 'page internal scripts' or other JavaScript external
+files, which are loaded separately.
+(After all, it's not all the time that you can dump all JS loads together in one flattened
+external <script>...)
+
+So what we do here is provide a little and quite rude 'service' which is to expect the
+'internal script' already to have been executed (or at least parsed) and invoke a
+predefined function made available in there: for 'regular use' we expect a running Combiner
+(combine.inc.php) which will accept an optional 'cb' argument pointing the the function which
+must be run next to execute the lazy-load cycle. This idea is inspired by the way google
+takes care of this load order issue in their translator JavaScript code:
+
+    <script>
+    function googleTranslateElementInit()
+    {
+        new google.translate.TranslateElement({
+                pageLanguage: 'en',
+                layout: google.translate.TranslateElement.InlineLayout.HORIZONTAL
+            }, 'google_translate_element');
+    }
+    </script>
+    <script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+
+Unfortunately, when we're loading JS in the installer we CANNOT assume the Combiner to assist us, so
+we code for a default callback here with a quite unique name:
+    ccms_lazyload_setup_GHO();
+If that function exists, it is executed at the end of this script. (And yes, we can assume the function
+exists when it is contained in the HTML page itself.
+
+
+When we use the 'lazy loader' for ALL the JavaScript stuff we can guarantee load order and
+make sure the 'page internal script bits' can provide us with those much needed special
+configuration bits.
+
+The way to accomplish this is by having all external JS scripts 'lazy loaded' and, where needed,
+have them invoke functions and stuff defined in the page itself.
+
+*/
+
+
+/*
+See also:
+
+http://www.electrictoolbox.com/check-javascript-function-exists/
+
+except for his mistake to check like this:
+
+  if (window.function_name) ...
+
+instead of using the typeof, the idea is good. The direct check turned out to break on FF3.6
+
+
+This check and invocation MUST happen in this lazyload.js: we can only guarantee this lazy loader
+is indeed 'loaded' itself, when it is the ONLY external JavaScript file we depend on in our HTML page.
+
+From here, the lazy loader will take over and make sure the other scripts get loaded and in the
+prescribed order!
+*/
+if (typeof window.ccms_lazyload_setup_GHO == 'function')
+{
+    window.ccms_lazyload_setup_GHO();
+}
+
