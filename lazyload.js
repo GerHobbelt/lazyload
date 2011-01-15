@@ -281,7 +281,7 @@ LazyLoad = (function () {
       // All browsers respect CSS specificity based on the order of the link
       // elements in the DOM, regardless of the order in which the stylesheets
       // are actually downloaded.
-      if (isCSS || (env.gecko && (env.no_async || env.gecko < 1.9)) || (env.opera && env.opera < 9.8)) {
+      if (isCSS /* || (env.gecko && (env.no_async || env.gecko < 1.9)) || (env.opera && env.opera < 9.8) */ ) {
         var o = {
           urls    : [].concat(urls), // concat ensures copy by value
           callback: callback,
