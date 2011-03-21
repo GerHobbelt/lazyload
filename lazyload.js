@@ -241,7 +241,7 @@ LazyLoad = (function (doc) {
       if (isCSS || env.async || env.gecko || env.opera) {
         // Load in parallel.
         var o = {
-          urls    : urls;
+          urls    : urls,
           callback: callback,
           obj     : obj,
           context : context
