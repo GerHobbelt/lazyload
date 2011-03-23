@@ -1,41 +1,41 @@
 /*jslint browser: true, eqeqeq: true, bitwise: true, newcap: true, immed: true, regexp: false */
 
 /**
-LazyLoad makes it easy and painless to lazily load one or more external
-JavaScript or CSS files on demand either during or after the rendering of a web
-page.
-
-Supported browsers include Firefox 2+, IE6+, Safari 3+ (including Mobile
-Safari), Google Chrome, and Opera 9+. Other browsers may or may not work and
-are not officially supported.
-
-Visit https://github.com/rgrove/lazyload/ for more info.
-
-Copyright (c) 2011 Ryan Grove <ryan@wonko.com>
-All rights reserved.
-
-Permission is hereby granted, free of charge, to any person obtaining a copy of
-this software and associated documentation files (the 'Software'), to deal in
-the Software without restriction, including without limitation the rights to
-use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
-the Software, and to permit persons to whom the Software is furnished to do so,
-subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED 'AS IS', WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
-FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
-COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
-IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-
-@module lazyload
-@class LazyLoad
-@static
-@version 2.0.2.dev (git)
-*/
+ * LazyLoad makes it easy and painless to lazily load one or more external
+ * JavaScript or CSS files on demand either during or after the rendering of a web
+ * page.
+ *
+ * Supported browsers include Firefox 2+, IE6+, Safari 3+ (including Mobile
+ * Safari), Google Chrome, and Opera 9+. Other browsers may or may not work and
+ * are not officially supported.
+ *
+ * Visit https://github.com/rgrove/lazyload/ for more info.
+ *
+ * Copyright (c) 2011 Ryan Grove <ryan@wonko.com>
+ * All rights reserved.
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of
+ * this software and associated documentation files (the 'Software'), to deal in
+ * the Software without restriction, including without limitation the rights to
+ * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+ * the Software, and to permit persons to whom the Software is furnished to do so,
+ * subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED 'AS IS', WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+ * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+ * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ *
+ * @module lazyload
+ * @class LazyLoad
+ * @static
+ * @version 2.0.2.dev (git)
+ */
 
 LazyLoad = (function (doc) {
   // -- Private Variables ------------------------------------------------------
@@ -148,7 +148,8 @@ LazyLoad = (function (doc) {
 
       pollCount = 0;
 
-      // If this is the last of the pending URLs, execute the callback and
+      // If this is the last of the pending URLs, and the callback has
+	  // not signalled us to pause loading subsequent scripts,
       // start the next request in the queue (if any).
       if (!urls.length) {
         pending[type] = null;
@@ -159,12 +160,12 @@ LazyLoad = (function (doc) {
   }
 
   /**
-  Populates the <code>env</code> variable with user agent and feature test
-  information.
-
-  @method getEnv
-  @private
-  */
+   * Populates the <code>env</code> variable with user agent and feature test
+   * information.
+   *
+   * @method getEnv
+   * @private
+   */
   function getEnv() {
     // No need to run again if already populated.
     if (env) { return; }
@@ -202,10 +203,10 @@ LazyLoad = (function (doc) {
    * @param {String} type resource type ('css' or 'js')
    * @param {String|Array} urls (optional) URL or array of URLs to load
    * @param {Function} callback (optional) callback function to execute when the
-   *   resource is loaded
+   *        resource is loaded
    * @param {Object} obj (optional) object to pass to the callback function
    * @param {Object} context (optional) if provided, the callback function will
-   *   be executed in this object's context
+   *        be executed in this object's context
    * @param {Boolean} whether you want to append (false, default) the new intries
    *        at the end of the queue or insert (true) at the front of the queue.
    *        The latter method should be used when your loaded JS adds to the queue
@@ -283,14 +284,14 @@ LazyLoad = (function (doc) {
       url = pendingUrls[i];
 
       if (isCSS) {
-          node = env.gecko ? createNode('style') : createNode('link', {
-           href   : url,
+        node = env.gecko ? createNode('style') : createNode('link', {
+          href   : url,
           rel    : 'stylesheet',
           type   : 'text/css'
           });
       } else {
         node = createNode('script', {
-           src    : url
+          src    : url
         });
         node.async = false;
       }
@@ -328,19 +329,19 @@ LazyLoad = (function (doc) {
   }
 
   /**
-  Begins polling to determine when the specified stylesheet has finished loading
-  in Gecko. Polling stops when all pending stylesheets have loaded or after 10
-  seconds (to prevent stalls).
-
-  Thanks to Zach Leatherman for calling my attention to the @import-based
-  cross-domain technique used here, and to Oleg Slobodskoi for an earlier
-  same-domain implementation. See Zach's blog for more details:
-  http://www.zachleat.com/web/2010/07/29/load-css-dynamically/
-
-  @method pollGecko
-  @param {HTMLElement} node Style node to poll.
-  @private
-  */
+   * Begins polling to determine when the specified stylesheet has finished loading
+   * in Gecko. Polling stops when all pending stylesheets have loaded or after 10
+   * seconds (to prevent stalls).
+   *
+   * Thanks to Zach Leatherman for calling my attention to the @import-based
+   * cross-domain technique used here, and to Oleg Slobodskoi for an earlier
+   * same-domain implementation. See Zach's blog for more details:
+   * http://www.zachleat.com/web/2010/07/29/load-css-dynamically/
+   *
+   * @method pollGecko
+   * @param {HTMLElement} node Style node to poll.
+   * @private
+   */
   function pollGecko(node) {
     try {
       node.sheet.cssRules;
@@ -365,13 +366,13 @@ LazyLoad = (function (doc) {
   }
 
   /**
-  Begins polling to determine when pending stylesheets have finished loading
-  in WebKit. Polling stops when all pending stylesheets have loaded or after 10
-  seconds (to prevent stalls).
-
-  @method pollWebKit
-  @private
-  */
+   * Begins polling to determine when pending stylesheets have finished loading
+   * in WebKit. Polling stops when all pending stylesheets have loaded or after 10
+   * seconds (to prevent stalls).
+   *
+   * @method pollWebKit
+   * @private
+   */
   function pollWebKit() {
     var css = pending.css, i;
 
@@ -405,44 +406,44 @@ LazyLoad = (function (doc) {
   return {
 
     /**
-    Requests the specified CSS URL or URLs and executes the specified
-    callback (if any) when they have finished loading. If an array of URLs is
-    specified, the stylesheets will be loaded in parallel and the callback
-    will be executed after all stylesheets have finished loading.
-
-    @method css
-    @param {String|Array} urls CSS URL or array of CSS URLs to load
-    @param {Function} callback (optional) callback function to execute when
-      the specified stylesheets are loaded
-    @param {Object} obj (optional) object to pass to the callback function
-    @param {Object} context (optional) if provided, the callback function
-      will be executed in this object's context
-    @static
-    */
+     * Requests the specified CSS URL or URLs and executes the specified
+     * callback (if any) when they have finished loading. If an array of URLs is
+     * specified, the stylesheets will be loaded in parallel and the callback
+     * will be executed after all stylesheets have finished loading.
+     *
+     * @method css
+     * @param {String|Array} urls CSS URL or array of CSS URLs to load
+     * @param {Function} callback (optional) callback function to execute when
+     *        the specified stylesheets are loaded
+     * @param {Object} obj (optional) object to pass to the callback function
+     * @param {Object} context (optional) if provided, the callback function
+     *        will be executed in this object's context
+     * @static
+     */
     css: function (urls, callback, obj, context, insert) {
       load('css', urls, callback, obj, context, insert);
     },
 
     /**
-    Requests the specified JavaScript URL or URLs and executes the specified
-    callback (if any) when they have finished loading. If an array of URLs is
-    specified and the browser supports it, the scripts will be loaded in
-    parallel and the callback will be executed after all scripts have
-    finished loading.
-
-    Currently, only Firefox and Opera support parallel loading of scripts while
-    preserving execution order. In other browsers, scripts will be
-    queued and loaded one at a time to ensure correct execution order.
-
-    @method js
-    @param {String|Array} urls JS URL or array of JS URLs to load
-    @param {Function} callback (optional) callback function to execute when
-      the specified scripts are loaded
-    @param {Object} obj (optional) object to pass to the callback function
-    @param {Object} context (optional) if provided, the callback function
-      will be executed in this object's context
-    @static
-    */
+     * Requests the specified JavaScript URL or URLs and executes the specified
+     * callback (if any) when they have finished loading. If an array of URLs is
+     * specified and the browser supports it, the scripts will be loaded in
+     * parallel and the callback will be executed after all scripts have
+     * finished loading.
+     *
+     * Currently, only Firefox and Opera support parallel loading of scripts while
+     * preserving execution order. In other browsers, scripts will be
+     * queued and loaded one at a time to ensure correct execution order.
+     *
+     * @method js
+     * @param {String|Array} urls JS URL or array of JS URLs to load
+     * @param {Function} callback (optional) callback function to execute when
+     *        the specified scripts are loaded
+     * @param {Object} obj (optional) object to pass to the callback function
+     * @param {Object} context (optional) if provided, the callback function
+     *        will be executed in this object's context
+     * @static
+     */
     js: function (urls, callback, obj, context, insert) {
       load('js', urls, callback, obj, context, insert);
     }
@@ -457,7 +458,7 @@ LazyLoad = (function (doc) {
 
 
 /*
-There's some serious issues with load order when loading multiple JavaScript files and depending
+There are some serious issues with load order when loading multiple JavaScript files and depending
 on this 'load order' IN ANY WAY in either 'page internal scripts' or other JavaScript external
 files, which are loaded separately.
 (After all, it's not all the time that you can dump all JS loads together in one flattened
