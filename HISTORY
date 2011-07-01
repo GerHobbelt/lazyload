@@ -1,6 +1,9 @@
 LazyLoad Changelog
 ================================================================================
 
+Version 2.x.x (YYYY-MM-DD)
+  * css() and js() methods now return created node(s)
+
 Version 2.0.2 (2011-04-17)
   * Added support for reliable detection of CSS load completion in Gecko
     browsers based on a technique described by Zach Leatherman at

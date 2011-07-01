@@ -160,12 +160,14 @@ LazyLoad = (function (doc) {
   @param {Object} obj (optional) object to pass to the callback function
   @param {Object} context (optional) if provided, the callback function will
     be executed in this object's context
+  @returns {DOM Element|Array} created (list of) node(s)
   @private
   */
   function load(type, urls, callback, obj, context) {
     var _finish = function () { finish(type); },
         isCSS   = type === 'css',
-        i, len, node, p, pendingUrls, url;
+        i, len, node, p, pendingUrls, url,
+        nodes = [];
 
     getEnv();
 
@@ -257,7 +259,9 @@ LazyLoad = (function (doc) {
       }
 
       head.appendChild(node);
+      nodes.push(node);
     }
+  return (nodes.length === 1) ? nodes[0] : nodes;
   }
 
   /**
@@ -350,10 +354,11 @@ LazyLoad = (function (doc) {
     @param {Object} obj (optional) object to pass to the callback function
     @param {Object} context (optional) if provided, the callback function
       will be executed in this object's context
+    @returns {DOM Element|Array} created (list of) node(s)
     @static
     */
     css: function (urls, callback, obj, context) {
-      load('css', urls, callback, obj, context);
+      return load('css', urls, callback, obj, context);
     },
 
     /**
@@ -374,10 +379,11 @@ LazyLoad = (function (doc) {
     @param {Object} obj (optional) object to pass to the callback function
     @param {Object} context (optional) if provided, the callback function
       will be executed in this object's context
+    @returns {DOM Element|Array} created (list of) node(s)
     @static
     */
     js: function (urls, callback, obj, context) {
-      load('js', urls, callback, obj, context);
+      return load('js', urls, callback, obj, context);
     }
 
   };
