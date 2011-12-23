@@ -34,7 +34,7 @@
  * @module lazyload
  * @class LazyLoad
  * @static
- * @version 2.0.2.dev (git)
+ * @version 2.0.3.dev (git)
  */
 
 LazyLoad = (function (doc) {
@@ -167,9 +167,6 @@ LazyLoad = (function (doc) {
    * @private
    */
   function getEnv() {
-    // No need to run again if already populated.
-    if (env) { return; }
-
     var ua = navigator.userAgent;
 
     env = {
@@ -219,9 +216,10 @@ LazyLoad = (function (doc) {
   function load(type, urls, callback, obj, context, insert) {
     var _finish = function () { finish(type); },
         isCSS   = type === 'css',
+        nodes   = [],
         i, len, node, p, pendingUrls, url;
 
-    getEnv();
+    env || getEnv();
 
     if (urls) {
       // If urls is a string, wrap it in an array. Otherwise assume it's an
@@ -324,7 +322,11 @@ LazyLoad = (function (doc) {
         node.onload = node.onerror = _finish;
       }
 
-      head.appendChild(node);
+      nodes.push(node);
+    }
+
+    for (i = 0, len = nodes.length; i < len; ++i) {
+      head.appendChild(nodes[i]);
     }
   }
 
@@ -343,8 +345,13 @@ LazyLoad = (function (doc) {
    * @private
    */
   function pollGecko(node) {
+    var hasRules;
+
     try {
-      node.sheet.cssRules;
+      // We don't really need to store this value or ever refer to it again, but
+      // if we don't store it, Closure Compiler assumes the code is useless and
+      // removes it.
+      hasRules = !!node.sheet.cssRules;
     } catch (ex) {
       // An exception means the stylesheet is still loading.
       pollCount += 1;
@@ -355,7 +362,7 @@ LazyLoad = (function (doc) {
         // We've been polling for 10 seconds and nothing's happened. Stop
         // polling and finish the pending requests to avoid blocking further
         // requests.
-        finish('css');
+        hasRules && finish('css');
       }
 
       return;
@@ -380,7 +387,7 @@ LazyLoad = (function (doc) {
       i = styleSheets.length;
 
       // Look for a stylesheet matching the pending URL.
-      while (i && --i) {
+      while (--i >= 0) {
         if (styleSheets[i].href === css.urls[0]) {
           finish('css');
           break;
