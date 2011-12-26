@@ -211,6 +211,7 @@ LazyLoad = (function (doc) {
    *        ensure that your 'children' are all loaded before the next 'sibling'.
    *        Note that the load order of all urls specified in a single load() call
    *        remains exactly the same, irrespective of this parameter.
+   * @returns {DOM Element|Array} created (list of) node(s)
    * @private
    */
   function load(type, urls, callback, obj, context, insert) {
@@ -328,6 +329,7 @@ LazyLoad = (function (doc) {
     for (i = 0, len = nodes.length; i < len; ++i) {
       head.appendChild(nodes[i]);
     }
+    return (nodes.length === 1) ? nodes[0] : nodes;
   }
 
   /**
@@ -425,10 +427,11 @@ LazyLoad = (function (doc) {
      * @param {Object} obj (optional) object to pass to the callback function
      * @param {Object} context (optional) if provided, the callback function
      *        will be executed in this object's context
+     * @returns {DOM Element|Array} created (list of) node(s)
      * @static
      */
     css: function (urls, callback, obj, context, insert) {
-      load('css', urls, callback, obj, context, insert);
+      return load('css', urls, callback, obj, context, insert);
     },
 
     /**
@@ -449,10 +452,11 @@ LazyLoad = (function (doc) {
      * @param {Object} obj (optional) object to pass to the callback function
      * @param {Object} context (optional) if provided, the callback function
      *        will be executed in this object's context
+     * @returns {DOM Element|Array} created (list of) node(s)
      * @static
      */
     js: function (urls, callback, obj, context, insert) {
-      load('js', urls, callback, obj, context, insert);
+      return load('js', urls, callback, obj, context, insert);
     }
   };
 })(this.document);
