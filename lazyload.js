@@ -167,6 +167,9 @@ LazyLoad = (function (doc) {
    * @private
    */
   function getEnv() {
+    // No need to run again if already populated.
+    if (env) { return; }
+
     var ua = navigator.userAgent;
 
     env = {
@@ -220,7 +223,7 @@ LazyLoad = (function (doc) {
         nodes   = [],
         i, len, node, p, pendingUrls, url;
 
-    env || getEnv();
+    getEnv();
 
     if (urls) {
       // If urls is a string, wrap it in an array. Otherwise assume it's an
