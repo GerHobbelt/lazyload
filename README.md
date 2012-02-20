@@ -19,7 +19,7 @@ Downloads
 
   * [lazyload.js](https://raw.github.com/GerHobbelt/lazyload/master/lazyload.js) (full source)
   * [lazyload-min.js](https://raw.github.com/GerHobbelt/lazyload/master/lazyload-min.js) (minified source)
-  * Archive: [tgz](https://github.com/rgrove/lazyload/tarball/release-2.0.3) | [zip](https://github.com/rgrove/lazyload/zipball/release-2.0.3)
+  * Archive: [tgz](https://raw.github.com/GerHobbelt/lazyload/master) | [zip](https://raw.github.com/GerHobbelt/lazyload/master)
 
 Usage
 -----
