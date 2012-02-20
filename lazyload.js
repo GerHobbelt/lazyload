@@ -430,6 +430,8 @@ LazyLoad = (function (doc) {
      * @param {Object} obj (optional) object to pass to the callback function
      * @param {Object} context (optional) if provided, the callback function
      *        will be executed in this object's context
+     * @param {Boolean} whether you want to append (false, default) the new intries
+     *        at the end of the queue or insert (true) at the front of the queue.
      * @returns {DOM Element|Array} created (list of) node(s)
      * @static
      */
@@ -455,6 +457,13 @@ LazyLoad = (function (doc) {
      * @param {Object} obj (optional) object to pass to the callback function
      * @param {Object} context (optional) if provided, the callback function
      *        will be executed in this object's context
+     * @param {Boolean} whether you want to append (false, default) the new intries
+     *        at the end of the queue or insert (true) at the front of the queue.
+     *        The latter method should be used when your loaded JS adds to the queue
+     *        recursively: by inserting, rather than appending to the queue, you
+     *        ensure that your 'children' are all loaded before the next 'sibling'.
+     *        Note that the load order of all urls specified in a single load() call
+     *        remains exactly the same, irrespective of this parameter.
      * @returns {DOM Element|Array} created (list of) node(s)
      * @static
      */
