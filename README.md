@@ -17,8 +17,8 @@ that larger script loaders provide.
 Downloads
 ---------
 
-  * [lazyload.js](https://github.com/rgrove/lazyload/raw/release-2.0.3/lazyload.js) (full source)
-  * [lazyload-min.js](https://github.com/rgrove/lazyload/raw/release-2.0.3/lazyload-min.js) (minified source)
+  * [lazyload.js](https://raw.github.com/GerHobbelt/lazyload/master/lazyload.js) (full source)
+  * [lazyload-min.js](https://raw.github.com/GerHobbelt/lazyload/master/lazyload-min.js) (minified source)
   * Archive: [tgz](https://github.com/rgrove/lazyload/tarball/release-2.0.3) | [zip](https://github.com/rgrove/lazyload/zipball/release-2.0.3)
 
 Usage
