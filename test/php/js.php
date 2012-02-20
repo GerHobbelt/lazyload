@@ -14,6 +14,10 @@ if (empty($cb) && isset($_GET['cb']))
 	$cb = 'window.ccms_lazyload_setup_GHO';
 }
 
+
+// TODO: generate JS code which takes a long time to PARSE (e.g. simlated large JS files) and/or takes a long time to run (simulating JS files which do a lot immediately when loaded)
+
+
 if (!empty($cb))
 {
 	echo <<<EOT
