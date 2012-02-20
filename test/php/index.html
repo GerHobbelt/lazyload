@@ -33,6 +33,7 @@
         <p>
           <input type="button" id="btnLoadJS" value="Load JS (sequential calls)" />
           <input type="button" id="btnLoadJSSingle" value="Load JS (single call)" />
+          <input type="button" id="btnLoadJSGoogle" value="Load JS (sequential calls, google-style callback)" />
         </p>
 
         <p>
@@ -68,6 +69,7 @@
           btnLoadCSSSingle = document.getElementById('btnLoadCSSSingle'),
           btnLoadJS        = document.getElementById('btnLoadJS'),
           btnLoadJSSingle  = document.getElementById('btnLoadJSSingle'),
+          btnLoadJSGoogle  = document.getElementById('btnLoadJSGoogle'),
           cssLogEl         = document.getElementById('csslog'),
           jsLogEl          = document.getElementById('jslog'),
 
@@ -150,6 +152,16 @@
         return stop_loading;
       }
       
+	  function jsParsed(num)
+	  {
+        jslog('google-style callback: lazyloaded JS #' + num + ' has been parsed.' + (num < js.length ? ' Loading next JS file' : 'Done loading and parsing all JS files!'));
+
+        if (num < js.length) 
+		{
+          LazyLoad.js(js[num] + '&cb=jsParsed', jsComplete);
+        }
+	  }
+	  
       function jslog(message) {
         jsLogEl.value += "[" + (new Date()).toTimeString() + "] " + message + "\r\n";
       }
@@ -182,6 +194,12 @@
         jslog('loading (single call)');
 
         LazyLoad.js(js, jsComplete);
+      }
+
+      btnLoadJSGoogle.onclick = function () {
+        jslog('loading (sequential calls, google server-asisted callback style)');
+
+        LazyLoad.js(js[0] + '&cb=jsParsed', jsComplete);
       }
     </script>
   </body>
