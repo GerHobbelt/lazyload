@@ -485,7 +485,7 @@ There are some serious issues with load order when loading multiple JavaScript f
 on this 'load order' IN ANY WAY in either 'page internal scripts' or other JavaScript external
 files, which are loaded separately.
 (After all, it's not all the time that you can dump all JS loads together in one flattened
-external <script>...)
+external {script}...)
 
 So what we do here is provide a little and quite rude 'service' which is to expect the
 'internal script' already to have been executed (or at least parsed) and invoke a
@@ -494,7 +494,7 @@ predefined function made available in there: for 'regular use' we expect a runni
 must be run next to execute the lazy-load cycle. This idea is inspired by the way google
 takes care of this load order issue in their translator JavaScript code:
 
-    <script>
+    {script}
     function googleTranslateElementInit()
     {
         new google.translate.TranslateElement({
@@ -502,8 +502,8 @@ takes care of this load order issue in their translator JavaScript code:
                 layout: google.translate.TranslateElement.InlineLayout.HORIZONTAL
             }, 'google_translate_element');
     }
-    </script>
-    <script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+    {/script}
+    {script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"}{/script}
 
 Unfortunately, when we're loading JS in the installer we CANNOT assume the Combiner to assist us, so
 we code for a default callback here with a quite unique name:
