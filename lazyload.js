@@ -110,20 +110,21 @@ LazyLoad = (function (doc) {
       // execute the callback for each finished JS load (progress bars 'n stuff can use this!)
       if (callback) {
 		var i;
-		var todocnt;
+		var todoUrls = [];
 
 		for (i = 0, todocnt = 0; i < queue[type].length; i++) {
-		  todocnt += queue[type][i].urls.length;
+		  todoUrls = todoUrls.concat(queue[type][i].urls);
 		}
 		// don't forget to add the number of currently pending URLs from 'pending' queue item!
-		todocnt += urls.length;
+        todoUrls = urls.concat(todoUrls);
 
         stop_loading = callback.call(p.context, p.obj, {
                 base_context: this,
                 // JS or CSS: which queue entry just finished loading
                 type: type,
-                // Because most often you'd want to know if you're the very last one in there, or not:
-                todo_count: todocnt,
+                // Because most often you'd want to know if you're the very last one in there, or not: 
+				// todo_count will only be zero(0) once: when all URLs, including all currently pending ones for this 'type', have been loaded.
+                todo_count: todoUrls.length,
                 // To see whether you'ld need to manually continue lazy loading when you stop the loading now:
                 pending_count: urls.length,
 				// And you may want to report the progress:
@@ -132,13 +133,13 @@ LazyLoad = (function (doc) {
                 document: document,
                 // Reference to the <head> element.
                 htmlhead: head,
+                // Queued requests. Note that these include the /panding/ requests too (at the front of the list)!
+                todo_set: todoUrls,
                 // Requests currently in progress, if any.
-                pending_set: pending,
+                pending_set: urls,
                 // Number of times we've polled to check whether a pending stylesheet has
                 // finished loading in WebKit. If this gets too high, we're probably stalled.
                 finish_pollcount: pollCount,
-                // Queued requests.
-                load_queue: queue,
                 // Reference to the browser's list of stylesheets.
                 page_stylesheets: styleSheets,
                 // User environment information.

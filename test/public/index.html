@@ -165,8 +165,7 @@
     
         if (lazy_obj.todo_count)
         {
-            /* nested invocation of LazyLoad added one or more sets to the load queue */
-            jslog('callback: Todo count: ' + lazy_obj.todo_count + ', Next up: '+ lazy_obj.load_queue['js'][0].urls);
+            jslog('callback: Todo count: ' + lazy_obj.todo_count + ', Next up: '+ lazy_obj.todo_set[0]);
         }
         else
         {
